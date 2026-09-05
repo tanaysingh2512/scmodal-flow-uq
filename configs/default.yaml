@@ -1,0 +1,47 @@
+# Central config for hyperparameters referenced across scripts/.
+# Anything hardcoded inline in src/ that matches these values should be
+# pulled from here instead, as scripts get filled in further.
+#
+# NOT currently loaded by any script -- this file is documentation of the
+# hyperparameters in use, not a live config. Confirmed via the
+# reproducibility audit (grep for yaml-loading calls across src/ and
+# scripts/ found none). Keep it accurate anyway, since it's the one place
+# meant to summarize every hyperparameter at a glance.
+
+paths:
+  citeseq_dir: CITE-seq_PBMC_v2
+  teaseq_root: TEA-seq_PBMC
+  teaseq_dir: TEA-seq_PBMC/TEA-seq_PBMC   # note the nested path
+
+data_prep:
+  n_top_genes: 3000
+
+flow:
+  hidden: 512
+  n_steps: 5000
+  batch_size: 256
+  lr: 0.001
+  sample_steps: 100
+  K: 50
+
+uncertainty:
+  epistemic_k: 10
+  mc_n_samples: 20
+  mc_noise_scale: 0.20
+
+finetune_sg4:
+  lr: 0.0001
+  weight_decay: 0.001
+  steps: 2000
+  seeds: [0, 1, 2, 3, 4]
+  floors_sweep: [0.0, 0.25, 0.5]
+  control_floor: 1.0
+
+calibration:
+  nominal_levels: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  # CITE-seq and TEA-seq use DIFFERENT scale grids in the original notebook
+  # (found during the reproducibility audit -- see docs/decisions.md).
+  # Do not assume a single shared grid; scripts/train_ua_flow.py passes
+  # each dataset's exact grid explicitly.
+  citeseq_scale_grid: {min: 0.1, max: 2.0, points: 191}
+  teaseq_scale_grid: {min: 0.01, max: 2.0, points: 200}

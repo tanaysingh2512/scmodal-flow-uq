@@ -1,0 +1,36 @@
+# scMODAL + flow-matching environment — used by every script except
+# scripts/train_totalvi.py. Never pip-install into this environment;
+# only rebuild via `conda env create -f environment-scmodal.yml` (see
+# docs/decisions.md — scvi-tools dependency conflicts silently break
+# torch/pandas here).
+#
+# This is a starting point based on the versions recorded in project notes,
+# not a verified `conda env export`. Regenerate the real file with:
+#   conda env export -n scmodal --no-builds > environment-scmodal.yml
+# before relying on this for a fresh machine.
+#
+# scipy was missing from an earlier draft of this file -- found during the
+# reproducibility audit by cross-checking every `import` statement in src/
+# and scripts/ against this list. src/calibration.py needs scipy.stats.norm
+# (used by scripts/train_ua_flow.py). Fixed here; see decisions.md.
+name: scmodal
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pip
+  - pip:
+      - torch==1.13.1
+      - scanpy==1.9.8
+      - anndata
+      - pandas
+      - numpy
+      - scipy
+      - scikit-learn
+      - mygene
+      - matplotlib
+      # scMODAL itself is installed via current-directory import resolution
+      # (see docs/flow.md / docs/decisions.md) -- NOT `pip install -e .`.
+      # Clone https://github.com/gefeiwang/scMODAL as a git submodule and
+      # run scripts from the repo root so Python resolves it via sys.path.

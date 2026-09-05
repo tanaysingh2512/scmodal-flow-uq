@@ -1,0 +1,55 @@
+# Checkpoints and large binary artifacts
+*.pth
+*.pt
+*.npy
+*.h5ad
+CITE-seq_PBMC/
+
+# CITE-seq_PBMC_v2/ holds the retrained checkpoint (large, .pth/.npy already
+# ignored above) alongside one small, non-sensitive reproducibility fixture
+# that IS tracked: rna_protein_correspondence.csv (~204 rows of gene/protein
+# name pairs -- required so build_or_load_correspondence() never needs a
+# live, non-deterministic mygene.info call again). Using `dir/*` rather than
+# a bare `dir/` here is required for the negation below to actually work --
+# git will not descend into a directory ignored via a bare trailing slash.
+CITE-seq_PBMC_v2/*
+!CITE-seq_PBMC_v2/rna_protein_correspondence.csv
+
+CITE-seq_PBMC_v2_sg4*/
+TEA-seq_PBMC/
+totalvi_model/
+totalvi_results/
+
+# Raw datasets (not included in this repo -- see docs/flow.md for expected
+# source/layout), EXCEPT for one small, non-sensitive reproducibility
+# fixture: data/tea-seq/protein_gene_conversion_new.csv (~46 rows, a static
+# protein<->gene name mapping substituted from the MaxFuse repo -- required
+# directly by build_teaseq_correspondence(), no generation fallback exists).
+# Same nested-negation idiom as above, one level deeper.
+data/*
+!data/tea-seq/
+data/tea-seq/*
+!data/tea-seq/protein_gene_conversion_new.csv
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.egg-info/
+.venv/
+venv/
+
+# OS
+.DS_Store
+
+# Results (regenerate via scripts/make_figures.py rather than committing)
+results/figures/*.png
+!results/figures/.gitkeep
+
+# scMODAL upstream: tracked as a git submodule (git submodule add), not
+# vendored. No ignore rule needed here -- a submodule reference is tracked
+# by git as a special gitlink entry regardless of .gitignore, and an
+# ignore rule for this path actively blocks `git submodule add` itself
+# (git refuses to add a path matched by .gitignore without -f). An earlier
+# draft of this file had `scMODAL/` listed here defensively, before any
+# submodule existed; removed once that command was actually run.

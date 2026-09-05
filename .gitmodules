@@ -1,0 +1,3 @@
+[submodule "scMODAL"]
+	path = scMODAL
+	url = https://github.com/gefeiwang/scMODAL

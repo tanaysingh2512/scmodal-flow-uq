@@ -1,0 +1,36 @@
+# totalVI baseline environment — used ONLY by scripts/train_totalvi.py.
+# Never install this alongside environment-scmodal.yml in the same env:
+# scvi-tools' dependency chain has caused silent torch/pandas breakage
+# when mixed with scMODAL's own pins (see docs/decisions.md).
+#
+# This is a starting point based on the versions recorded in project notes,
+# not a verified `conda env export`. Regenerate the real file with:
+#   conda env export -n totalvi --no-builds > environment-totalvi.yml
+# before relying on this for a fresh machine.
+#
+# scanpy/anndata/pandas are needed here even though src/totalvi_baseline.py
+# itself doesn't import them: scripts/train_totalvi.py reuses
+# src/data_prep.py's load_citeseq_raw() for the raw CITE-seq loading (same
+# underlying data as the main pipeline), which pulls in all three
+# transitively. Kept explicit here rather than assumed, since scvi-tools
+# alone would not require them.
+#
+# matplotlib was removed here during the reproducibility audit -- nothing
+# in scripts/train_totalvi.py or src/totalvi_baseline.py actually imports
+# it (make_figures.py, which does, runs in the scmodal env instead). If you
+# want to plot directly inside the totalvi env for ad hoc exploration,
+# add it back; it's just not required by any script here.
+name: totalvi
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pip
+  - pip:
+      - scvi-tools==1.1.6.post2
+      - scanpy
+      - anndata
+      - pandas
+      - numpy
+      - torch
