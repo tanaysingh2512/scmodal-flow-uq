@@ -16,20 +16,34 @@ CITE-seq_PBMC_v2/*
 !CITE-seq_PBMC_v2/rna_protein_correspondence.csv
 
 CITE-seq_PBMC_v2_sg4*/
-TEA-seq_PBMC/
+
+# TEA-seq_PBMC/ holds the checkpoint and large .npy artifacts (already
+# ignored above via *.pth/*.npy) alongside one small, non-sensitive
+# reproducibility fixture: TEA-seq_PBMC/data/tea-seq/protein_gene_conversion_new.csv
+# (~46 rows, a static protein<->gene name mapping substituted from the
+# MaxFuse repo -- required directly by build_teaseq_correspondence(), no
+# generation fallback exists). This lives NESTED here, not at a top-level
+# data/tea-seq/, because the original notebook's Section 2 cells changed
+# working directory into TEA-seq_PBMC/ before loading it with a relative
+# path. Same dir/* + negation idiom as CITE-seq_PBMC_v2/ above, one level
+# deeper (nested twice: TEA-seq_PBMC/ then data/tea-seq/).
+TEA-seq_PBMC/*
+!TEA-seq_PBMC/data/
+TEA-seq_PBMC/data/*
+!TEA-seq_PBMC/data/tea-seq/
+TEA-seq_PBMC/data/tea-seq/*
+!TEA-seq_PBMC/data/tea-seq/protein_gene_conversion_new.csv
+
 totalvi_model/
 totalvi_results/
 
-# Raw datasets (not included in this repo -- see docs/flow.md for expected
-# source/layout), EXCEPT for one small, non-sensitive reproducibility
-# fixture: data/tea-seq/protein_gene_conversion_new.csv (~46 rows, a static
-# protein<->gene name mapping substituted from the MaxFuse repo -- required
-# directly by build_teaseq_correspondence(), no generation fallback exists).
-# Same nested-negation idiom as above, one level deeper.
-data/*
-!data/tea-seq/
-data/tea-seq/*
-!data/tea-seq/protein_gene_conversion_new.csv
+# Raw CITE-seq datasets (not included in this repo). No fixture lives
+# directly under here -- a plain ignore is sufficient, no negation needed
+# at this level. Anchored with a leading slash (/data/, not data/) --
+# an unanchored `data/` pattern also matches TEA-seq_PBMC/data/ (gitignore
+# patterns without a leading slash match at any directory depth), which
+# would silently break the TEA-seq fixture negation above.
+/data/
 
 # Python
 __pycache__/
@@ -47,9 +61,4 @@ results/figures/*.png
 !results/figures/.gitkeep
 
 # scMODAL upstream: tracked as a git submodule (git submodule add), not
-# vendored. No ignore rule needed here -- a submodule reference is tracked
-# by git as a special gitlink entry regardless of .gitignore, and an
-# ignore rule for this path actively blocks `git submodule add` itself
-# (git refuses to add a path matched by .gitignore without -f). An earlier
-# draft of this file had `scMODAL/` listed here defensively, before any
-# submodule existed; removed once that command was actually run.
+# vendored. No ignore rule needed here.

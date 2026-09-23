@@ -501,3 +501,31 @@ dropped.
 call that the submission venue isn't decided yet — no names, no
 identifying paths, generic environment/config files. See prior conversation
 for the anonymous.4open.science recommendation when it's time to submit.
+
+---
+
+### 2026-09-23 — TEA-seq correspondence-CSV path bug fixed on the actual working repo
+
+**What was fixed:** `.gitignore`, `scripts/load_raw_data.py`, and
+`src/teaseq_prep.py` were corrected to use `TEA-seq_PBMC/data/tea-seq/...`
+instead of a top-level `data/tea-seq/...` for the TEA-seq raw `.h5ad` files
+and the `protein_gene_conversion_new.csv` fixture. Root cause: the original
+notebook's Section 2 changes working directory into `TEA-seq_PBMC/` before
+loading these files with a relative path -- the same "nested one level
+deeper" pattern already documented for TEA-seq checkpoints/`.npy` files,
+just missed for this specific file during the original migration.
+
+**Confirmed against the real filesystem, not assumed:**
+`find ~/scMODAL -iname "protein_gene_conversion*"` and a follow-up `find`
+for `RNA.h5ad`/`ATAC.h5ad`/`ADT.h5ad` both confirmed the nested location
+directly.
+
+**Process note, worth recording:** this fix was originally made and
+verified in an ephemeral sandbox, but the corrected files were never
+actually delivered to the real working repo (already transferred via git
+bundle by that point) -- the sandbox later reset, and the fix was
+effectively lost until re-diagnosed from `git check-ignore -v` output
+against the live repo and reconstructed from scratch. Lesson: once a repo
+has been handed off to its real, persistent location, further fixes need
+to be applied and verified directly against that location, not just in a
+disconnected working copy.

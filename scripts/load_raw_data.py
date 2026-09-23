@@ -97,7 +97,7 @@ def main():
     parser.add_argument("--citeseq-dir", default="CITE-seq_PBMC_v2")
     parser.add_argument("--teaseq-root", default="TEA-seq_PBMC")
     parser.add_argument("--citeseq-data-dir", default="./data/citeseq_pbmc")
-    parser.add_argument("--teaseq-data-dir", default="./data/tea-seq")
+    parser.add_argument("--teaseq-data-dir", default="./TEA-seq_PBMC/data/tea-seq")
     parser.add_argument("--resume", action="store_true", help="fast-resume an existing checkpoint instead of training")
     parser.add_argument("--train", action="store_true", help="(TEA-seq only) run the one-time ~13hr integration")
     args = parser.parse_args()

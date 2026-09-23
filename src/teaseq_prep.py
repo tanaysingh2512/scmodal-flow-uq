@@ -23,7 +23,7 @@ import anndata as ad
 import scanpy as sc
 
 
-def load_teaseq_raw(data_dir: str = "./data/tea-seq"):
+def load_teaseq_raw(data_dir: str = "./TEA-seq_PBMC/data/tea-seq"):
     """Loads raw TEA-seq RNA/ATAC/ADT AnnData. Expected shapes:
     RNA (7437, 18352), ATAC (7437, 18352), ADT (7437, 46)."""
     data_dir = Path(data_dir)
@@ -34,7 +34,7 @@ def load_teaseq_raw(data_dir: str = "./data/tea-seq"):
     return adata_RNA, adata_ATAC, adata_ADT
 
 
-def build_teaseq_correspondence(adata_RNA, adata_ADT, conversion_csv: str = "./data/tea-seq/protein_gene_conversion_new.csv") -> np.ndarray:
+def build_teaseq_correspondence(adata_RNA, adata_ADT, conversion_csv: str = "./TEA-seq_PBMC/data/tea-seq/protein_gene_conversion_new.csv") -> np.ndarray:
     """Builds the RNA<->protein correspondence table from the static MaxFuse
     conversion file (with TCR naming fixes already applied in the CSV)."""
     correspondence = pd.read_csv(conversion_csv)
